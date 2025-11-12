@@ -110,10 +110,26 @@ RichHttpResponse response = future.join();
 
 ## 测试
 
-运行测试：
+### 运行测试
 
 ```bash
 mvn test
+```
+
+### 使用外部HTTP服务进行测试
+
+项目支持使用外部HTTP服务进行测试。例如，你可以使用Python启动一个简单的HTTP服务器：
+
+```bash
+mkdir test-server
+echo "Hello from Python Test Server" > test-server/index.html
+cd test-server && python3 -m http.server 8080
+```
+
+然后运行针对外部服务的测试：
+
+```bash
+mvn test -Dtest=ExternalHttpServiceTest
 ```
 
 ## 许可证

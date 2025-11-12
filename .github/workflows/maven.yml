@@ -30,6 +30,31 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    
-    - name: maven test
+    # 安装并设置Python环境
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    # 使用Python启动简单的HTTP服务器
+    - name: Start Python HTTP Server
+      run: |
+        mkdir -p test-server
+        echo "Hello from Python Test Server" > test-server/index.html
+        cd test-server && python3 -m http.server 8081 &
+        # 等待服务器启动
+        sleep 5
+        
+    # 运行外部HTTP服务测试
+    - name: Run External HTTP Service Test
+      run: |
+        mvn exec:java -Dexec.mainClass="com.example.ExternalHttpServiceTest" -Dexec.classpathScope=test
+        
+    # 停止Python HTTP服务器
+    - name: Stop Python HTTP Server
+      if: always()
+      run: |
+        pkill -f "python3 -m http.server" || true
+
+    - name: Maven unit tests
       run: ./mvnw clean test
