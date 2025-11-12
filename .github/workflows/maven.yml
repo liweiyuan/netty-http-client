@@ -32,4 +32,4 @@ jobs:
 
     
     - name: maven test
-      uses: ./maven clean test
+      uses: ./mvnw clean test
